@@ -2,19 +2,17 @@
 import { useState } from 'react';
 
 function App() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [age, setAge] = useState('');
-
-  const [user, setUser] = useState({});
-
+  const [input, setInput] = useState('');
+  const [tasks, setTasks] = useState([
+    'ba',
+    'li',
+    'nha'
+  ]);
+ 
   function handleRegister(e) {
     e.preventDefault();
-    setUser({
-      name: name,
-      age: age,
-      email: email,
-    })
+    setTasks([...tasks, input]);
+    setInput('');
   }
 
   return (
@@ -22,25 +20,11 @@ function App() {
       <h1>Cadastro de Usuário</h1>
 
       <form onSubmit={handleRegister}>
-        <label>Nome: </label><br/>
+        <label>Nome da tarefa</label><br/>
         <input 
-          placeholder="Digite seu nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        /><br/>
-
-        <label>Email: </label><br/>
-        <input 
-          placeholder="Digite seu Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        /><br/>
-
-        <label>Idade: </label><br/>
-        <input 
-          placeholder="Digite sua Idade"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
+          placeholder="Digite uma tarefa"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         /><br/>
 
         <button type="submit">Registrar</button>
@@ -48,11 +32,11 @@ function App() {
         <br/>
         <br/>
 
-        <div>
-          <span>Bem vindo {user.name}</span><br/>
-          <span>Email:  {user.email}</span><br/>
-          <span>Idade:  {user.age}</span><br/>
-        </div>
+        <ul>
+          {tasks.map( task => (
+            <li key={task}>{task}</li>
+          ))}
+        </ul>
       </form>
     </div>
   );
