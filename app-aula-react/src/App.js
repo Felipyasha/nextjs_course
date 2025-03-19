@@ -1,43 +1,41 @@
 
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import './style.css'
 
 function App() {
-  const [input, setInput] = useState('');
-  const [tasks, setTasks] = useState([
-    'ba',
-    'li',
-    'nha'
-  ]);
- 
-  function handleRegister(e) {
-    e.preventDefault();
-    setTasks([...tasks, input]);
-    setInput('');
-  }
+  const [nutri, setNutri] = useState([]);
+  useEffect(() => {
+    function loadAPI() {
+      let url = 'https://sujeitoprogramador.com/rn-api/?api=posts';
+
+      fetch(url)
+      .then((r) => r.json())
+      .then((json) => {
+        setNutri(json);        
+      })
+    }
+
+    loadAPI(); 
+},[]);
+
 
   return (
-    <div>
-      <h1>Cadastro de Usuário</h1>
+    <div className="container">
+      <header>
+        <strong>React Nutri</strong>
+      </header>
 
-      <form onSubmit={handleRegister}>
-        <label>Nome da tarefa</label><br/>
-        <input 
-          placeholder="Digite uma tarefa"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        /><br/>
+      {nutri.map((item) => {
+        return(
+          <article key={item.id} className="post">
+            <strong className='titulo'>{item.titulo}</strong>
+            <img src={item.capa} alt={item.titulo} className='capa'/>
+            <p className='subtitulo'>{item.subtitulo}</p>
+            <a className='botao'>Acessar</a>
 
-        <button type="submit">Registrar</button>
-
-        <br/>
-        <br/>
-
-        <ul>
-          {tasks.map( task => (
-            <li key={task}>{task}</li>
-          ))}
-        </ul>
-      </form>
+          </article>
+        )
+      })}
     </div>
   );
 }
