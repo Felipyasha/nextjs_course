@@ -1,13 +1,16 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function App() {
   const [input, setInput] = useState('');
-  const [tasks, setTasks] = useState([
-    'ba',
-    'li',
-    'nha'
-  ]);
+  const [tasks, setTasks] = useState(() => {
+    const tasksStorage = localStorage.getItem('@task');
+    return tasksStorage ? JSON.parse(tasksStorage) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('@task', JSON.stringify(tasks))
+  }, [tasks]);
  
   function handleRegister(e) {
     e.preventDefault();
