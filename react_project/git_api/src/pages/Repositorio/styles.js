@@ -106,3 +106,22 @@ export const IssuesList = styled.div`
     }
 `
 
+export const PageActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button{
+    outline: 0;
+    border: 0;
+    background: #222;
+    color: #FFF;
+    border-radius: 4px;
+    padding: 5px 10px;
+
+    &:disabled{
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+`

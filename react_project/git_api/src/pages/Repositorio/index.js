@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import api from '../../services/api';
 import { useParams } from 'react-router-dom';
-import { Container, Owner, Loading, BackButton, IssuesList} from './styles';
+import { Container, Owner, Loading, BackButton, IssuesList, PageActions } from './styles';
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function Repositorio() {
@@ -10,6 +10,7 @@ export default function Repositorio() {
   const [repository, setRepository] = useState({});
   const [issues, setIssues] = useState([]);
   const [loading, setloading] = useState(true);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
 
@@ -31,7 +32,7 @@ export default function Repositorio() {
       setRepository(repositorioData.data);
       setIssues(issuesData.data);
       console.log(issuesData.data);
-      
+
       setloading(false);
 
     }
@@ -39,6 +40,30 @@ export default function Repositorio() {
     load();
 
   }, [params.repositorio]);
+
+  useEffect(() => {
+    async function loadIssue() {
+      const nomeRepo = params.repositorio;
+
+      const response = await api.get(`/repos/${nomeRepo}/issues`, {
+        params: {
+          state: 'open',
+          page,
+          per_page: 5,
+        }
+      });
+
+      setIssues(response.data);
+
+    }
+
+    loadIssue();
+
+  }, [page, params.repositorio]);
+
+  function handlePage(action) {
+    setPage(action === 'back' ? page - 1 : page + 1)
+  }
 
   if (loading) {
     return (
@@ -52,13 +77,13 @@ export default function Repositorio() {
   return (
     <Container>
       <BackButton to="/">
-        <FaArrowLeft color='#000' size={30}/>
+        <FaArrowLeft color='#000' size={30} />
       </BackButton>
 
       <Owner>
         <img
           src={repository.owner.avatar_url}
-          alt={repository.owner.login }
+          alt={repository.owner.login}
         />
         <h1>
           {repository.name}
@@ -76,9 +101,9 @@ export default function Repositorio() {
               <strong>
                 <a href={issue.html_url}>{issue.title}</a>
 
-                {issue.labels.map(label =>(
+                {issue.labels.map(label => (
                   <span key={String(label.id)}>
-                    {label.name}  
+                    {label.name}
                   </span>
                 ))}
               </strong>
@@ -88,6 +113,19 @@ export default function Repositorio() {
           </li>
         ))}
       </IssuesList>
+
+      <PageActions>
+        <button
+          type='buttom'
+          onClick={() => handlePage('back')}
+          disabled={page < 2}
+        >
+          Voltar
+        </button>
+        <button type='buttom' onClick={() => handlePage('next')}>
+          Proxima
+        </button>
+      </PageActions>
     </Container>
   );
 }
