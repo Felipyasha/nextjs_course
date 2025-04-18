@@ -28,7 +28,7 @@ export const Form = styled.form`
 
     input{
         flex: 1;
-        border: 1px solid #DDD;
+        border: 1px solid ${props => (props.error ? '#FF0000' : '#EEE')};
         padding: 10px 15px ;
         border-radius: 4px;
     }
@@ -103,5 +103,5 @@ export const DeleteButton = styled.button.attrs({
     border: 0;
     padding: 8px 7px;
     outline: 0;
-    border-radius: 4px;
+    border-radius: 4px; 
 `;
